@@ -1,11 +1,12 @@
 #!/usr/bin/env python
+# -*- coding: utf8 -*-
 from ase.lattice.cubic import *
 from sets import Set
 from numpy import *
 from math import *
 from ase import *
 from pylab import *
-
+import random
 
 #print '**** Create the 5x9 supercell structure ****'
 #LC      = input('1. What is the lattice constant in Angstron? \n')
@@ -16,7 +17,7 @@ from pylab import *
 
 class RandomSQS(Atoms):
     
-    def   __init__(self,LC,NB,E1,E2,x):
+    def   __init__(self,LC=None,NB=None,E1=None,E2=None,x=.2,trials=10000):
         """
          Create the 5x9 supercell structure  
          LC:number
@@ -133,9 +134,9 @@ class RandomSQS(Atoms):
         
         
         print '**** Generate random alloys and calculate the correlation coefficients ****'
-        cc,ll,rmse,l,lat=[],[],1,[],[]
+        cc,ll,rmse,l,self.lat=[],[],1,[],[]
         traj=PickleTrajectory('Random.traj','w')
-        for no in range(10000):
+        for no in range(trials):
             index= []
             ln = range(len(self.SC))
             ### replace E1 atoms randomly
@@ -191,10 +192,10 @@ class RandomSQS(Atoms):
                self.rmse = rmsen
                self.cp   = cn
                self.l    = norder
-               self  = AA
+               self.lat  = AA
             
-    def write_vasp(self):
-        print '**** Write VASP structure files ****'
+ 
+        
         out = file('Random.dat','a')
         print self.cp[0],self.cp[1],self.cp[2],self.cp[3],self.cp[4],self.cp[5], self.rmse, '==> final result!'
         print >>out, self.cp[0],self.cp[1],self.cp[2],self.cp[3],self.cp[4],self.cp[5], self.rmse
@@ -221,14 +222,14 @@ class RandomSQS(Atoms):
         tcell[1][2] = -tcell[2][2]/self.NB/2
         self.lat0.set_cell(tcell,scale_atoms=True)
         self.lat1.set_cell(tcell,scale_atoms=True)
-        write('BCC.poscar',self,format='vasp',direct=True)
-        write('SYM.poscar',self.lat0,format='vasp',direct=True)
-        write('ASY.poscar',self.lat1,format='vasp',direct=True)
+        #write('BCC.poscar',self.lat,format='vasp',direct=True)
+        #write('SYM.poscar',self.lat0,format='vasp',direct=True)
+        #write('ASY.poscar',self.lat1,format='vasp',direct=True)
         print '############# Done! ##############' 
         
-    def show(self):
-        
-        cell  =self.get_cell()
+    def show(self, file=None):
+    
+        cell  = self.lat.get_cell()
         pos_i = self.lat0.get_positions()
         pos_f = self.lat0.get_positions()
         pos_d = pos_f - pos_i
@@ -264,8 +265,8 @@ class RandomSQS(Atoms):
         V = [(pos_i[nn[i][0]][1]-pos_i[nn[i][1]][1])*d[i]/cell[2][2]*3 for i in range(len(nn))]
         
         dc1, dc2 = [cell[0][0]/2,cell[1][1]*(1/3.+2/27.)], [cell[0][0],cell[1][1]*(1/3.+1/27.)]
-        symbols = self.get_chemical_symbols()
-        colors  = ['w']*len(self)
+        symbols = self.lat.get_chemical_symbols()
+        colors  = ['w']*len(self.lat)
         for i, symbol in enumerate(symbols):
             if symbol != 'W': colors[i]='g'
         
@@ -294,4 +295,7 @@ class RandomSQS(Atoms):
         ylabel('[110] --->')
         title('1/2<111> screw dislocation')
         axis([-2.5, cell[0][0]+cell[1][0]+2.5, -(((cell[0][0]+cell[1][0])+5)*3/4-cell[1][1])/2, cell[1][1]+(((cell[0][0]+cell[1][0])+5)*3/4-cell[1][1])/2])
-        show()
+        if file :
+           savefig(file)
+        else:
+            show()

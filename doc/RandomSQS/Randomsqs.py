@@ -1,12 +1,6 @@
-import RandomSQS
+from RandomSQS import RandomSQS
 from ase.io import read, write
 
-Bulk=read('Tungsten135ideal',format='vasp')
+WIrSQS= RandomSQS(LC=3.17,NB=1,E1="W",E2="Ir",x=0.2,trials=100)  
 
-repeat=4
-concentration=0.2
-suplement="Ir"
-
-WIrSQS=RandomSQS(Bulk,repeat,concentration,suplement)
-
-write('WIr.pov', WIrSQS, show_unit_cell=2, display=False, run_povray=True)
+WIrSQS.show(file="SQSscrew.png")

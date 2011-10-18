@@ -9,6 +9,9 @@ This class is used to generate the Special Quasirandom Structure (SQS) to model 
 It redefines a bcc lattice with c axis along <111> and inserts the dislocation dipole.
 Then it generates the SQS for a given concentration.
  
+ 
+.. autoclass:: RandomSQS
+ 
 To get a RandomSQS one initializes the RandomSQS object
 
 .. literalinclude:: Randomsqs.py
