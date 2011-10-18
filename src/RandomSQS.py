@@ -7,6 +7,7 @@ from math import *
 from ase import *
 from pylab import *
 import random
+import pickle
 
 #print '**** Create the 5x9 supercell structure ****'
 #LC      = input('1. What is the lattice constant in Angstron? \n')
@@ -17,7 +18,7 @@ import random
 
 class RandomSQS(Atoms):
     
-    def   __init__(self,LC=None,NB=None,E1=None,E2=None,x=.2,trials=10000):
+    def   __init__(self,LC=None,NB=None,E1=None,E2=None,x=.2,trials=10000,fromfile=None):
         """
          Create the 5x9 supercell structure  
          LC:number
@@ -32,6 +33,8 @@ class RandomSQS(Atoms):
                 concentration of second alloying element. i.e. 0.25
 
         """
+       
+
         self.NB=NB
         self.concentration=x
         self.E1=E1
@@ -226,7 +229,7 @@ class RandomSQS(Atoms):
         #write('SYM.poscar',self.lat0,format='vasp',direct=True)
         #write('ASY.poscar',self.lat1,format='vasp',direct=True)
         print '############# Done! ##############' 
-        
+            
     def show(self, file=None):
     
         cell  = self.lat.get_cell()
@@ -299,3 +302,7 @@ class RandomSQS(Atoms):
            savefig(file)
         else:
             show()
+    
+
+        
+  
