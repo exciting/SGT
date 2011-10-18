@@ -4,7 +4,7 @@ from sets import Set
 from numpy import *
 from math import *
 from ase import *
-import random
+from pylab import *
 
 
 #print '**** Create the 5x9 supercell structure ****'
@@ -207,21 +207,91 @@ class RandomSQS(Atoms):
         norder = [dict[i][1] for i in range(len(dict))]
         SC0 = self.screw.repeat((1,1,self.NB))
         SC1 = self.screwn.repeat((1,1,self.NB))
-        lat0 = Atoms()
-        lat1 = Atoms()
-        lat0.set_cell(self.SC.get_cell())
-        lat1.set_cell(self.SC.get_cell())
+        self.lat0 = Atoms()
+        self.lat1 = Atoms()
+        self.lat0.set_cell(self.SC.get_cell())
+        self.lat1.set_cell(self.SC.get_cell())
         for i in norder:
-            lat0.append(SC0[i])
-            lat1.append(SC1[i])
+            self.lat0.append(SC0[i])
+            self.lat1.append(SC1[i])
         for i in range(int(len(self.SC)*(1-self.concentration)), len(self.SC)):
-            lat0[i].set_symbol(self.E2)
-            lat1[i].set_symbol(self.E2)
+            self.lat0[i].set_symbol(self.E2)
+            self.lat1[i].set_symbol(self.E2)
         tcell = self.SC.get_cell()
         tcell[1][2] = -tcell[2][2]/self.NB/2
-        lat0.set_cell(tcell,scale_atoms=True)
-        lat1.set_cell(tcell,scale_atoms=True)
+        self.lat0.set_cell(tcell,scale_atoms=True)
+        self.lat1.set_cell(tcell,scale_atoms=True)
         write('BCC.poscar',self,format='vasp',direct=True)
-        write('SYM.poscar',lat0,format='vasp',direct=True)
-        write('ASY.poscar',lat1,format='vasp',direct=True)
-        print '############# Done! ##############'      
+        write('SYM.poscar',self.lat0,format='vasp',direct=True)
+        write('ASY.poscar',self.lat1,format='vasp',direct=True)
+        print '############# Done! ##############' 
+        
+    def show(self):
+        
+        cell  =self.get_cell()
+        pos_i = self.lat0.get_positions()
+        pos_f = self.lat0.get_positions()
+        pos_d = pos_f - pos_i
+        
+        nn = []
+        for i1 in range(len(pos_i)):
+            for i2 in range(i1,len(pos_i)):
+                diff = pos_i[i1][:2] - pos_i[i2][:2]
+                r = sqrt(np.dot(diff, diff))
+                if 0.1 < r and r < 2.8: nn.append([i1,i2])
+        
+        X0= [p[0] for p in pos_i]
+        Y0= [p[1] for p in pos_i]
+        X = [(pos_i[i[0]][0]+pos_i[i[1]][0])/2 for i in nn]
+        Y = [(pos_i[i[0]][1]+pos_i[i[1]][1])/2 for i in nn]
+        
+        d = [pos_d[nn[i][0]][2]-pos_d[nn[i][1]][2] for i in range(len(nn))]
+        for i in range(len(d)):
+            while True:
+                try:
+                    if d[i]/cell[2][2] > 1./2:
+                        d[i] = d[i]-cell[2][2]
+                    elif d[i]/cell[2][2] < -1./2:
+                        d[i] = d[i]+cell[2][2]
+                    else:
+                        break
+                except:
+                    print "Retrying!"
+        
+        U0= [pos_i[nn[i][0]][0]-pos_i[nn[i][1]][0] for i in range(len(nn))]
+        V0= [pos_i[nn[i][0]][1]-pos_i[nn[i][1]][1] for i in range(len(nn))]
+        U = [(pos_i[nn[i][0]][0]-pos_i[nn[i][1]][0])*d[i]/cell[2][2]*3 for i in range(len(nn))]
+        V = [(pos_i[nn[i][0]][1]-pos_i[nn[i][1]][1])*d[i]/cell[2][2]*3 for i in range(len(nn))]
+        
+        dc1, dc2 = [cell[0][0]/2,cell[1][1]*(1/3.+2/27.)], [cell[0][0],cell[1][1]*(1/3.+1/27.)]
+        symbols = self.get_chemical_symbols()
+        colors  = ['w']*len(self)
+        for i, symbol in enumerate(symbols):
+            if symbol != 'W': colors[i]='g'
+        
+        scatter(X0,Y0,s=80,marker='o',c=colors,lw=2,label='W atom')
+        scatter(dc1[0],dc1[1],s=30,marker='^',c='m',label='disl cent 1')
+        scatter(dc2[0],dc2[1],s=30,marker='^',c='m',label='disl cent 2')
+        plot((0,cell[0][0],cell[0][0]+cell[1][0],cell[1][0],0),(0,0,cell[1][1],cell[1][1],0),'g-',lw=2,label='unitcell')
+        ax = gca()
+        
+        com_tuple = []
+        for i in range(len(nn)):
+            if 2*cell[1][1]/27 < sqrt((X[i]-dc1[0])**2+(Y[i]-dc1[1])**2) < cell[0][0]/15 or 2*cell[1][1]/27 < sqrt((X[i]-dc2[0])**2+(Y[i]-dc2[1])**2) < cell[0][0]/15:
+                com_tuple.append((X[i],abs(d[i])))
+                color = 'r'
+            else:
+                color = 'k'
+            arr = Arrow(X[i]-U[i]/2,Y[i]-V[i]/2,U[i],V[i],width=d[i],color=color)
+            ax.add_patch(arr)
+        
+        com_sort = sorted(com_tuple)
+        polarity = (com_sort[1][1]-com_sort[4][1]+com_sort[5][1]-com_sort[3][1]+com_sort[2][1]-com_sort[0][1])/cell[2][2]
+        print 'Core polarity p = ', polarity
+        #arr.set_label('diff disp')
+        legend()
+        xlabel('[11-2] --->')
+        ylabel('[110] --->')
+        title('1/2<111> screw dislocation')
+        axis([-2.5, cell[0][0]+cell[1][0]+2.5, -(((cell[0][0]+cell[1][0])+5)*3/4-cell[1][1])/2, cell[1][1]+(((cell[0][0]+cell[1][0])+5)*3/4-cell[1][1])/2])
+        show()
