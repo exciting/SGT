@@ -1,7 +1,7 @@
 .. module:: RandomSQS
 
 =========
-RandomSQS Screw dislocation
+Screw dislocation in Spezial Quasirandom Structure
 =========
 
 This class is used to generate the Special Quasirandom Structure (SQS) to model the 1/2<111>

@@ -16,7 +16,7 @@ import pickle
 #E2      = raw_input('4. What is the second element symbol? \n')
 #x    = input('5. What is the concentration of second alloying element? i.e. 0.25 \n')
 
-class RandomSQS(Atoms):
+class SQSscrew(object):
     
     def   __init__(self,LC=None,NB=None,E1=None,E2=None,x=.2,trials=10000,fromfile=None):
         """
