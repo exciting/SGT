@@ -230,7 +230,7 @@ class RandomSQS(Atoms):
     def show(self, file=None):
     
         cell  = self.lat.get_cell()
-        pos_i = self.lat0.get_positions()
+        pos_i = self.lat.get_positions()
         pos_f = self.lat0.get_positions()
         pos_d = pos_f - pos_i
         
