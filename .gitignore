@@ -1,0 +1,5 @@
+_*
+*.pyc
+.project
+.pydevproject
+.settings
