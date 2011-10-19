@@ -5,9 +5,10 @@ Contents
 The complete table of contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
 
    index
-   RandomSQS
-   StackingFault
+   RandomSQS/RandomSQS
+   StackingFault/Stackingfault
+   Elastic/elastic
 

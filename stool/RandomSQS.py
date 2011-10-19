@@ -17,22 +17,23 @@ import pickle
 #x    = input('5. What is the concentration of second alloying element? i.e. 0.25 \n')
 
 class SQSscrew(object):
+    r"""
+         Create the object that contains the 5x9 supercell structure with screw dislocations
+         
+         LC: number
+                lattice constant in Ångström
+         NB: number   
+                length of dislocation line in Bergers vector
+         E1: string
+                first element symbol
+         E2: string   
+                second element symbol
+         x: number   
+                concentration of second alloying element. i.e. 0.25
+    """
     
     def   __init__(self,LC=None,NB=None,E1=None,E2=None,x=.2,trials=10000,fromfile=None):
-        """
-         Create the 5x9 supercell structure  
-         LC:number
-                lattice constant in Angström?
-         NB:number   
-                length of dislocation line in Bergers vector
-         E1:string
-                first element symbol
-         E2:string   
-                second element symbol
-         x:number   
-                concentration of second alloying element. i.e. 0.25
-
-        """
+        
        
 
         self.NB=NB
@@ -231,6 +232,14 @@ class SQSscrew(object):
         print '############# Done! ##############' 
             
     def show(self, file=None):
+        """
+        The show method displays the screw dislocations.
+         
+        file: string
+            If given the picture is written to a file. The format is determined by the suffix.
+            Else the picture is displayed to the user
+        
+        """
     
         cell  = self.lat.get_cell()
         pos_i = self.lat.get_positions()
@@ -303,6 +312,20 @@ class SQSscrew(object):
         else:
             show()
     
-
+    def get_bcc(self):
+        """
+        returns the undisturbed lattice.
+        """
+        return self.lat
+    def get_sym(self):
+        """
+        returns the lattice with screw dislocation.
+        """
+        return self.lat0
+    def get_asy(self):
+        """
+        returns the lattice with asymmetric screw dislocation.
+        """
+        return self.lat1
         
   
