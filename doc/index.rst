@@ -3,6 +3,7 @@ Structure Tools
 =============================
  
 
- :mod:`RandomSQS`
+:mod:`RandomSQS`
+:mod:`StackingFault`
  
 

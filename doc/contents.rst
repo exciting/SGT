@@ -9,4 +9,5 @@ The complete table of contents:
 
    index
    RandomSQS
+   StackingFault
 
