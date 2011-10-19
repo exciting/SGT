@@ -10,7 +10,7 @@ It reads an initial unit-cell, and produces a super-cell containing an arbitrary
  
  .. literalinclude:: StackingFault.py
  
- The resulting structure, rendered with povray gives:
+ The resulting structure is:
  
  .. image::  sc.png 
 
