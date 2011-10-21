@@ -25,8 +25,14 @@ import shutil
 import glob
 import math
 import sys
-from pyspglib import spglib
-
+try:
+    from pyspglib import spglib
+except ImportError:
+    print "#######################################################"
+    print "In order to use the Elastic tools you need  pyspglib"
+    print "#######################################################"
+    print "http://spglib.sourceforge.net/pyspglibForASE/"
+    
 class Elastic_setup():
     
     def setup(self,structure,calculator,order, maxstrain,distortions):

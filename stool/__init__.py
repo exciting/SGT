@@ -1,6 +1,6 @@
-from RandomSQS import  *
-from StackingFaultShift import *
-from Elastic import  *
+from RandomSQS import  SQSscrew
+from StackingFaultShift import StackingFaultShift
+from Elastic import   ElasticDistortion
 import pickle
 
 def loadObject(file):
