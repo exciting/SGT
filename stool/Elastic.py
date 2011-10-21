@@ -1,7 +1,9 @@
 
 from ase import *
 
-from Elasticlib  import Elastic_setup
+from Elasticlib  import Elastic_setup,  elastic_select_data
+ 
+import pickle
 
 class ElasticDistortion(Elastic_setup):
     """
@@ -25,14 +27,20 @@ class ElasticDistortion(Elastic_setup):
     
     def calculate(self):
         """
-        start all the calculations
+        Start The calculations
         """
-        return 0
+        for dist in self.distortions:
+            if  self.mthd=="Energy":
+                dist.atoms.get_potential_energy()
+                print "did", dist 
+            else:
+                dist.atoms.get_stress()
+ 
     def select_data(self):
         """
         select range an fitorder to eliminate errors
         """
-        return 0
+        elastic_select_data(self)
     def get_elastic_c(self):
         """
         calculate the elastic constants
@@ -40,6 +48,27 @@ class ElasticDistortion(Elastic_setup):
         return 0
     def make_report(self):
         """
-        compile a report file
+        Write Report
         """
-        print "REPORT"
+        print    'Order of elastic constants      =', self.order         ,\
+                    '\nMethod of calculation           =', self.mthd         ,\
+                    '\nDFT code name                   =', self.calculator.__class__.__name__ ,\
+                    '\nSpace-group number              =', self.SGN          ,\
+                    '\nVolume of equilibrium unit cell =', self.structure.get_volume(), '[a.u^3]',\
+                    '\nMaximum Lagrangian strain       =', self.maxstrain          ,\
+                    '\nNumber of distorted structures  =', self.NPt ,\
+                    '\nMethod                          =', self.mthd,\
+                    '\nNumber of elastic constatns     =', self.ECs
+                   
+    def print_distortions(self):
+        for dist in self.distortions:
+            dist.print_distortion()
+    def save(self,file):
+        """
+        save the  ElasticDistortion object with all data
+        """
+        pickle.dump(self,open(file,"wb",2))
+
+
+    
+        

@@ -34,10 +34,14 @@ class Elastic_setup():
         self.SGN=spglib.get_symmetry_dataset(structure, symprec=1e-5)["number"]
         self.structure=structure
         self.calculator=calculator
+        self.structure.set_calculator(calculator)
         self.order=order
         self.maxstrain=maxstrain
         self.NPt=distortions
         self.distortions=[]
+   
+        if ( hasattr(self.calculator, 'get_stress') ): self.mthd ='Stress' 
+        else:  self.mthd = 'Energy'
         
         #%%%--- DICTIONARIS ---%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         self.Ls_Dic={                       \
@@ -147,8 +151,7 @@ class Elastic_setup():
         #--------------------------------------------------------------------------------------------------------------------------------
         
     
-        if ( hasattr(self.calculator, 'get_stress') ): self.mthd ='Stress' 
-        else:  self.mthd = 'Energy'
+        
         
         #%%%--- Reading the order of the elastic constants ---%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        
@@ -159,59 +162,59 @@ class Elastic_setup():
        
         
         if (1 <= self.SGN and self.SGN <= 2):      # Triclinic
-            LC = 'N'
-            if (self.order == 2): ECs = 21
-            if (self.order == 3): ECs = 56  
+            self.LC = 'N'
+            if (self.order == 2): self.ECs = 21
+            if (self.order == 3): self.ECs = 56  
         
         elif(3 <= self.SGN and self.SGN <= 15):    # Monoclinic
-            LC = 'M'
-            if (self.order == 2): ECs = 13
-            if (self.order == 3): ECs = 32 
+            self.LC = 'M'
+            if (self.order == 2): self.ECs = 13
+            if (self.order == 3): self.ECs = 32 
         
         elif(16 <= self.SGN and self.SGN <= 74):   # Orthorhombic
-            LC = 'O'
-            if (self.order == 2): ECs =  9
-            if (self.order == 3): ECs = 20 
+            self.LC = 'O'
+            if (self.order == 2): self.ECs =  9
+            if (self.order == 3): self.ECs = 20 
         
         elif(75 <= self.SGN and self.SGN <= 88):   # Tetragonal II
-            LC = 'TII'
-            if (self.order == 2): ECs =  7
-            if (self.order == 3): ECs = 16
+            self.LC = 'TII'
+            if (self.order == 2): self.ECs =  7
+            if (self.order == 3): self.ECs = 16
           
         elif(89 <= self.SGN and self.SGN <= 142):  # Tetragonal I
-            LC = 'TI'
-            if (self.order == 2): ECs =  6
-            if (self.order == 3): ECs = 12  
+            self.LC = 'TI'
+            if (self.order == 2): self.ECs =  6
+            if (self.order == 3): self.ECs = 12  
         
         elif(143 <= self.SGN and self.SGN <= 148): # Rhombohedral II 
-            LC = 'RII'
-            if (self.order == 2): ECs =  7
-            if (self.order == 3): ECs = 20
+            self.LC = 'RII'
+            if (self.order == 2): self.ECs =  7
+            if (self.order == 3): self.ECs = 20
         
         elif(149 <= self.SGN and self.SGN <= 167): # Rhombohedral I
-            LC = 'RI'
-            if (self.order == 2): ECs =  6
-            if (self.order == 3): ECs = 14
+            self.LC = 'RI'
+            if (self.order == 2): self.ECs =  6
+            if (self.order == 3): self.ECs = 14
         
         elif(168 <= self.SGN and self.SGN <= 176): # Hexagonal II
-            LC = 'HII'
-            if (self.order == 2): ECs =  5
-            if (self.order == 3): ECs = 12
+            self.LC = 'HII'
+            if (self.order == 2): self.ECs =  5
+            if (self.order == 3): self.ECs = 12
         
         elif(177 <= self.SGN and self.SGN <= 194): # Hexagonal I
-            LC = 'HI'
-            if (self.order == 2): ECs =  5
-            if (self.order == 3): ECs = 10
+            self.LC = 'HI'
+            if (self.order == 2): self.ECs =  5
+            if (self.order == 3): self.ECs = 10
         
         elif(195 <= self.SGN and self.SGN <= 206): # Cubic II
-            LC = 'CII'
-            if (self.order == 2): ECs =  3
-            if (self.order == 3): ECs =  8
+            self.LC = 'CII'
+            if (self.order == 2): self.ECs =  3
+            if (self.order == 3): self.ECs =  8
         
         elif(207 <= self.SGN and self.SGN <= 230): # Cubic I
-            LC = 'CI'
-            if (self.order == 2): ECs =  3
-            if (self.order == 3): ECs =  6
+            self.LC = 'CI'
+            if (self.order == 2): self.ECs =  3
+            if (self.order == 3): self.ECs =  6
         else: sys.exit('\n     ... Oops ERROR: WRONG Space Group Number !?!?!?    \n')
         
         if (self.order == 2): order = 'second'
@@ -260,13 +263,6 @@ class Elastic_setup():
         
         #%%%--- Writing the INFO_ElaStic file ---%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        print    'Order of elastic constants      =', self.order         ,\
-                    '\nMethod of calculation           =', self.mthd         ,\
-                    '\nDFT code name                   = exciting'      ,\
-                    '\nSpace-group number              =', self.SGN          ,\
-                    '\nVolume of equilibrium unit cell =', self.structure.get_volume(), '[a.u^3]',\
-                    '\nMaximum Lagrangian strain       =', self.maxstrain          ,\
-                    '\nNumber of distorted structures  =', self.NPt
        
         #--------------------------------------------------------------------------------------------------------------------------------
         
@@ -274,95 +270,95 @@ class Elastic_setup():
         
         if (self.mthd == 'Energy'):
             if (self.order == 2):
-                if (LC == 'CI' or \
-                    LC == 'CII'):
+                if (self.LC == 'CI' or \
+                    self.LC == 'CII'):
                     Lag_strain_list = ['01','08','23']
-                if (LC == 'HI' or \
-                    LC == 'HII'):
+                if (self.LC == 'HI' or \
+                    self.LC == 'HII'):
                     Lag_strain_list = ['01','26','04','03','17']
-                if (LC == 'RI'):
+                if (self.LC == 'RI'):
                     Lag_strain_list = ['01','08','04','02','05','10']
-                if (LC == 'RII'):
+                if (self.LC == 'RII'):
                     Lag_strain_list = ['01','08','04','02','05','10','11']
-                if (LC == 'TI'):
+                if (self.LC == 'TI'):
                     Lag_strain_list = ['01','26','27','04','05','07']
-                if (LC == 'TII'):
+                if (self.LC == 'TII'):
                     Lag_strain_list = ['01','26','27','28','04','05','07']
-                if (LC == 'O'):
+                if (self.LC == 'O'):
                     Lag_strain_list = ['01','26','25','27','03','04','05','06','07']
-                if (LC == 'M'):
+                if (self.LC == 'M'):
                     Lag_strain_list = ['01','25','24','28','29','27','20','12','03','04','05','06','07']
-                if (LC == 'N'):
+                if (self.LC == 'N'):
                     Lag_strain_list = ['02','03','04','05','06','07','08','09','10','11',\
                                        '12','13','14','15','16','17','18','19','20','21','22']
         
             if (self.order == 3):
-                if (LC == 'CI'):
+                if (self.LC == 'CI'):
                     Lag_strain_list = ['01','08','23','32','10','11']
-                if (LC == 'CII'):
+                if (self.LC == 'CII'):
                     Lag_strain_list = ['01','08','23','32','10','11','12','09']
-                if (LC == 'HI'):
+                if (self.LC == 'HI'):
                     Lag_strain_list = ['01','26','04','03','17','30','08','02','10','14']
-                if (LC == 'HII'):
+                if (self.LC == 'HII'):
                     Lag_strain_list = ['01','26','04','03','17','30','08','02','10','14','12','31']
-                if (LC == 'RI'):
+                if (self.LC == 'RI'):
                     Lag_strain_list = ['01','08','04','02','05','10','11','26','09','03','17','34','33','35']
-                if (LC == 'RII'):
+                if (self.LC == 'RII'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'TI'):
+                if (self.LC == 'TI'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'TII'):
+                if (self.LC == 'TII'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'O'):
+                if (self.LC == 'O'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'M'):
+                if (self.LC == 'M'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'N'):
+                if (self.LC == 'N'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
         
         if (self.mthd == 'Stress'):
             if (self.order == 2):
-                if (LC == 'CI' or \
-                    LC == 'CII'):
+                if (self.LC == 'CI' or \
+                    self.LC == 'CII'):
                     Lag_strain_list = ['36']
-                if (LC == 'HI' or \
-                    LC == 'HII'):
+                if (self.LC == 'HI' or \
+                    self.LC == 'HII'):
                     Lag_strain_list = ['36','38']
-                if (LC == 'RI' or \
-                    LC == 'RII'):
+                if (self.LC == 'RI' or \
+                    self.LC == 'RII'):
                     Lag_strain_list = ['36','38']
-                if (LC == 'TI' or \
-                    LC == 'TII'):
+                if (self.LC == 'TI' or \
+                    self.LC == 'TII'):
                     Lag_strain_list = ['36','38']
-                if (LC == 'O'):
+                if (self.LC == 'O'):
                     Lag_strain_list = ['36','38','40']
-                if (LC == 'M'):
+                if (self.LC == 'M'):
                     Lag_strain_list = ['36','37','38','39','40']
-                if (LC == 'N'):
+                if (self.LC == 'N'):
                     Lag_strain_list = ['36','37','38','39','40','41']
         
             if (self.order == 3):
-                if (LC == 'CI'):
+                if (self.LC == 'CI'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'CII'):
+                if (self.LC == 'CII'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'HI'):
+                if (self.LC == 'HI'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'HII'):
+                if (self.LC == 'HII'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'RI'):
+                if (self.LC == 'RI'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'RII'):
+                if (self.LC == 'RII'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'TI'):
+                if (self.LC == 'TI'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'TII'):
+                if (self.LC == 'TII'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'O'):
+                if (self.LC == 'O'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'M'):
+                if (self.LC == 'M'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
-                if (LC == 'N'):
+                if (self.LC == 'N'):
                     sys.exit('\n     ... Oops SORRY: Not implemented yet. \n')
         
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
@@ -392,8 +388,8 @@ class Elastic_setup():
                     if (self.mthd == 'Stress'): r = 0.00001
         
                 Ls = zeros(6)
-                for i in range(6):
-                    Ls[i] = Ls_list[i]
+                for xindex in range(6):
+                    Ls[xindex] = Ls_list[xindex]
                 Lv = r*Ls
         #-------Lagrangian strain to physical strain (eta = eps + 0.5*eps*esp)-----------------------------------------------------------
                 eta_matrix      = zeros((3,3))
@@ -439,12 +435,14 @@ class Elastic_setup():
                  
                  
                 self.distortions.append(
-                    distortion(self.structure.copy(),cell=M_new)
+                    distortion(self.structure, calculator=calculator,cell=M_new,eta=[cont2,r], LagrangeS= [cont1, self.Ls_str[i]])
                     )
         
        
         #--------------------------------------------------------------------------------------------------------------------------------
                  
-          
+        print    "total distortions", len(self.distortions)
         fdis.close()
          #--------------------------------------------------------------------------------------------------------------------------------
+    
+    

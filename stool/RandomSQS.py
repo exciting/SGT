@@ -8,6 +8,7 @@ from ase import *
 from pylab import *
 import random
 import pickle
+import inspect
 
 #print '**** Create the 5x9 supercell structure ****'
 #LC      = input('1. What is the lattice constant in Angstron? \n')
@@ -32,14 +33,14 @@ class SQSscrew(object):
                 concentration of second alloying element. i.e. 0.25
     """
     
-    def   __init__(self,LC=None,NB=None,E1=None,E2=None,x=.2,trials=10000,fromfile=None):
+    def   __init__(self,LC=None,NB=None,E1=None,E2=None,x=.2,trials=10000 ):
         
-       
-
+        
         self.NB=NB
         self.concentration=x
         self.E1=E1
         self.E2=E2
+        self.lat=Atoms()
         ### single slice of 135-atom unitcell
         SS      = BodyCenteredCubic(directions=[[1,1,-2],[-2,7,-5],[1,1,1]],size=(5,1,1),symbol=E1,latticeconstant=LC)
         cell    = SS.get_cell()
@@ -138,7 +139,8 @@ class SQSscrew(object):
         
         
         print '**** Generate random alloys and calculate the correlation coefficients ****'
-        cc,ll,rmse,l,self.lat=[],[],1,[],[]
+        cc,ll,rmse,l=[],[],1,[]
+        
         traj=PickleTrajectory('Random.traj','w')
         for no in range(trials):
             index= []
@@ -230,7 +232,7 @@ class SQSscrew(object):
         #write('SYM.poscar',self.lat0,format='vasp',direct=True)
         #write('ASY.poscar',self.lat1,format='vasp',direct=True)
         print '############# Done! ##############' 
-            
+                
     def show(self, file=None):
         """
         The show method displays the screw dislocations.
@@ -327,5 +329,9 @@ class SQSscrew(object):
         returns the lattice with asymmetric screw dislocation.
         """
         return self.lat1
-        
-  
+    
+    def save(self,filename):
+        out=open(filename,"wb")
+        pickle.dump(self,out,2)
+        out.close()
+      
