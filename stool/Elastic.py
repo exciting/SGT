@@ -8,8 +8,11 @@ import pickle
 class ElasticDistortion(Elastic_setup):
     """
     This class can setup the calculations for determining the elastic constants
-    structure:Atoms object
-    calculator:calculator object
+    
+    structure: Atoms object
+    
+    calculator: calculator object
+    
     order: integer
         order of elastic constatns
     maxstrain:number
@@ -63,6 +66,7 @@ class ElasticDistortion(Elastic_setup):
     def print_distortions(self):
         for dist in self.distortions:
             dist.print_distortion()
+            
     def save(self,file):
         """
         save the  ElasticDistortion object with all data
