@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 from ase import Atoms
 import numpy as np
-def StackingFaultShift (primunit,n_slab=3,n_block=1,n_shift=3.,shift=1.):
+def StackingFaultShift (primunit,n_slab=3,n_block=1,n_shift=3.,shift=0.):
         """
          returns supercell structure containing stacking faults
          
@@ -24,7 +24,7 @@ def StackingFaultShift (primunit,n_slab=3,n_block=1,n_shift=3.,shift=1.):
         s2=np.array([-2.,-1.,0.])*float(shift)/n_shift
         s3=np.array([1.,2.,0.])*float(shift)/n_shift
         shiftdir=np.array([s1,s2,s3])
-
+	
         posnew= positions.copy()
         for slab in range(n_slab):  
                 
@@ -36,6 +36,7 @@ def StackingFaultShift (primunit,n_slab=3,n_block=1,n_shift=3.,shift=1.):
                     posnew[i,:]+=shiftdir[slab%3,:]
        
         SC.set_scaled_positions(posnew)
+	SC.translate(-SC.get_positions()[0])
         return SC
         
         
