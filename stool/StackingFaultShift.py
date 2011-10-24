@@ -17,8 +17,9 @@ def StackingFaultShift (primunit,n_slab=3,n_block=1,n_shift=3.,shift=0.):
          
           
         """
-        
+     
         SC = primunit.repeat((1,1,n_slab*n_block))
+      
         positions=SC.get_scaled_positions()
         s1=np.array([1.,-1.,0.])*float(shift)/n_shift
         s2=np.array([-2.,-1.,0.])*float(shift)/n_shift
@@ -26,17 +27,15 @@ def StackingFaultShift (primunit,n_slab=3,n_block=1,n_shift=3.,shift=0.):
         shiftdir=np.array([s1,s2,s3])
 	
         posnew= positions.copy()
-        for slab in range(n_slab):  
-                
-            for i in range(0,len(positions)):
+        for slab in range(n_slab):   
+           for iatom in range(0,len(positions)):
                 startslab=1.0/n_slab*slab
-                endslab=1.0/n_slab*(slab+1)
-                
-                if positions[i,2]>=startslab:
-                    posnew[i,:]+=shiftdir[slab%3,:]
-       
+                endslab=1.0/n_slab*(slab+1) 
+                if positions[iatom,2]>=startslab:
+                    posnew[iatom,:]+=shiftdir[slab%3,:]
         SC.set_scaled_positions(posnew)
-	SC.translate(-SC.get_positions()[0])
+        SC.translate(-SC.get_positions()[0])
+       
         return SC
         
         

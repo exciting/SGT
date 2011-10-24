@@ -26,7 +26,7 @@ class ElasticDistortion(Elastic_setup):
        
        
         self.setup(structure,calculator, order, maxstrain,distortions)
-    
+        self.make_report()
     
     def calculate(self):
         """

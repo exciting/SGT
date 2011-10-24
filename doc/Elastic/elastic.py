@@ -11,7 +11,7 @@ distortions=ElasticDistortion(structure=atoms,
                               order=3, 
                               maxstrain=0.02, 
                               distortions=5)
-distortions.print_distortions()
+#distortions.print_distortions()
 distortions.calculate()
 
 distortions.save("distwenergy")
