@@ -1,8 +1,9 @@
 from stool import  *
 distortions=loadObject("distwenergy")
-distortions.make_report()
-distortions.select_data()
+#distortions.make_report()
 
-elasticcontants=distortions.get_elastic_c()
+#distortions.select_data()
 
-distortions.make_report()
+elasticcontants=distortions.get_elastic_c(selectdata=[0.02,2] )
+
+ 

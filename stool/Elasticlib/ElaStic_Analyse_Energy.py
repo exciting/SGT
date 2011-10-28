@@ -147,9 +147,10 @@ def elastic_select_data(self):
                 if (abs(straintmp[0]+emax) < 1.e-7):
                     straintmp.pop(0)
                     energytmp.pop(0)
-                if (abs(strain[len(strain)-1]-emax) < 1.e-7):
+                if (abs(straintmp[len(straintmp)-1]-emax) < 1.e-7):
                     straintmp.pop()
                     energytmp.pop()
+               
         fD.close()
         fE.close()
         
@@ -200,7 +201,7 @@ def elastic_select_data(self):
     
         os.system('xmgrace '+ Dstn +'_CVe.dat -param '+ Dstn +'_CVe.par -saveall '+ Dstn +'_CVe.agr &')
     
-    os.chdir('../')
+    #os.chdir('../')
     
     #--- Writing the ElaStic_???.in file --------------------------------------------------------------------------------------------
     if (self.order == 2): orth  = '2nd'

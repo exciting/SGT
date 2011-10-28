@@ -1,7 +1,9 @@
 
 from ase import *
 
-from Elasticlib  import Elastic_setup,  elastic_select_data
+from Elasticlib  import Elastic_setup,  elastic_select_data , ElaSicResult
+
+import numpy as np
  
 import pickle
 
@@ -44,11 +46,30 @@ class ElasticDistortion(Elastic_setup):
         select range an fitorder to eliminate errors
         """
         elastic_select_data(self)
-    def get_elastic_c(self):
+    def get_elastic_c(self,selectdata=None):
         """
-        calculate the elastic constants
+        calculate the elastic constants. It takes one argument, the selectdata list.
+        It may be a pair of etamax and fit order, which configures all elastic constants,
+        or an array of pairs. Each pair configures one of the elastic constants.
         """
-        return 0
+        
+        self.fitdatasel=[]
+        if not(selectdata):
+            selectdata=[self.maxstrain, self.order+4]
+        else:
+            if np.shape(selectdata)==(2,):
+                for dist in range(self.ECs):
+                    self.fitdatasel.append(selectdata)
+            elif np.shape(selectdata)==(self.ECs,2):
+                 for dist in range(self.ECs):
+                    self.fitdatasel.append(selectdata[dist])
+                     
+            else:
+                print "The selectdata array must have only one eta,order pair for" 
+                print "all elastic constants or a list of pairs for each of the", self.ECs," constants"
+                return 1
+        ElaSicResult(self)
+        
     def make_report(self):
         """
         Write Report
