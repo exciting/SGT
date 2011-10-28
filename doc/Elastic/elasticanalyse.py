@@ -5,5 +5,5 @@ distortions=loadObject("distwenergy")
 #distortions.select_data()
 
 elasticcontants=distortions.get_elastic_c(selectdata=[0.02,2] )
-
- 
+print elasticcontants
+distortions.make_report()

@@ -1,7 +1,7 @@
 
 from ase import *
 
-from Elasticlib  import Elastic_setup,  elastic_select_data , ElaSicResult
+from Elasticlib  import Elastic_setup,  elastic_select_data , ElaSicResult,print_elastic_moduli
 
 import numpy as np
  
@@ -26,7 +26,7 @@ class ElasticDistortion(Elastic_setup):
     def __init__(self,structure=None,calculator=None, order=2, maxstrain=0.03,distortions=11):
        
        
-       
+        self.havecontants=False
         self.setup(structure,calculator, order, maxstrain,distortions)
         self.make_report()
     
@@ -68,7 +68,7 @@ class ElasticDistortion(Elastic_setup):
                 print "The selectdata array must have only one eta,order pair for" 
                 print "all elastic constants or a list of pairs for each of the", self.ECs," constants"
                 return 1
-        ElaSicResult(self)
+        return ElaSicResult(self)
         
     def make_report(self):
         """
@@ -83,6 +83,9 @@ class ElasticDistortion(Elastic_setup):
                     '\nNumber of distorted structures  =', self.NPt ,\
                     '\nMethod                          =', self.mthd,\
                     '\nNumber of elastic constatns     =', self.ECs
+        if self.havecontants:
+            print_elastic_moduli(self,None)
+            
                    
     def print_distortions(self):
         for dist in self.distortions:
