@@ -2,6 +2,7 @@ import numpy as np
 import math as m
 import copy
 from numpy import linalg
+from isinteger import isinteger
 def slab_ducvec(self):
     self.Dhkl=1.0/m.sqrt(np.dot(self.Ghkl,self.Ghkl))
     N=10
@@ -58,14 +59,135 @@ def slab_ducvec(self):
                     vec1=Svec2[0]*self.ducvec[0,:]+Svec2[1]*self.ducvec[1,:]+Svec2[2]*self.ducvec[2,:]
                     vec2=LATGRID1[i][0]*self.ducvec[0,:]+LATGRID1[i][1]*self.ducvec[1,:]+LATGRID1[i][2]*self.ducvec[2,:]
                     dist1=np.dot(vec1,vec1)   
-                    dist2=np.dot(vec2,vec2)    
-            
-
+                    dist2=np.dot(vec2,vec2)  
+                       
                     if(dist1>dist2 and dist2!=0):
                         Svec2=LATGRID1[i]
                 
                     
+    """ !===    Define    3rd  vector  =============================
+     ! There are 2 approaches to define 3rd vector:
+     !    1) 3rd vector is || Ghkl 
+     !      (does'nt take into account number of layers explicitly)
+     !
+     !            \ 
+     !       -----O-----O-----O-----O-------
+     !            \
+     !       ---O-----O-----O-----O-----O---
+     !            \ 
+     !       -O-----O-----O-----O-----O-----
+     !            \  
+     !       -----@-----O-----O-----O-----O-
+     !
+     !     O - a lattice point , ----  - a plane (hkl)
+     !         
+     !     @ - the origin, \ - the direction of Ghkl
+     !        
+     !       
+     !    2) 3rd vector is the nearest one to Ghkl in the n-th plane
+     !       (takes into account number of layers explicitly)
+     !
+     !            \ 
+     !       -----O-----O-----O-----O-------  (n+1)-th plane
+     !            \
+     !       ---O-----O-----O-----O-----O---   n-th plane
+     !          * \
+     !          *
+     !       ...............................            
+     !
+     !           *\
+     !       -O-----O-----O-----O-----O-----   1-st plane
+     !           *\  
+     !       -----@-----O-----O-----O-----O-   0-th plane
+     !
+     !     O - a lattice point , ----  - a plane (hkl)
+     !         
+     !     @ - the origin, \ - the direction og Ghkl
+     !
+     !     * - the direction of the 3rd vector 
+     !-----------------------------------------------------------            
+     """             
+    if self.method==2:
+    #!------   \\ Ghkl   ---------------------------------
+        hkl=np.matrix([h,k,l])
+        M= np.mat(ducvec)*np.transpose(np.mat(ducvec))
+            
+        M= linalg.inv(M)
+ 
+        V=hkl*M
+            
+        V=self.Dhkl**2*V
+            
+        flag=False
+            
+        for  N_Layers in range(1,N_Layers_Max):
+            if (flag==True):
+                exit
                     
+            else:
                     
-        
+                temp_vector=N_Layers*V
+
+                isinteger(temp_vector[0],x,err[0])
+                isinteger(temp_vector[1],y,err[1])
+                isinteger(temp_vector[2],z,err[2])
+                    
+                if (err[0]==False and err[1]==False and err[2]==False):
+                    
+                    print 'Good luck! Perpendicular z-vector is found'
+                    print 'The thickness of slab is',N_layers,'Dhkl'
+                    
+                    Slab_layers=self.layers
+                    Svec3=np.array([x,y,z])
+                    Svec3=Slab_layers*Svec3   
+                    flag=True
+                    
+                   
+                
+        slab_vec[0]=Svec1[0]*ducvec[0]+Svec1[1]*ducvec[1]+Svec1[2]*ducvec[2]
+        slab_vec[1]=Svec2[0]*ducvec[0]+Svec2[1]*ducvec[1]+Svec2[2]*ducvec[2]
+        slab_vec[2]=Svec3[0]*ducvec[0]+Svec3[1]*ducvec[1]+Svec3[2]*ducvec[2]    
+    elif self.method==3:
+        flag=False
+        for x in range(N,-N,-1):
+            for y in range (N,-N,-1):
+                for z in range(N,-N,-1):
+                    vec1=x*ducvec[0]+y*ducvec[1]+z*ducvec[2]
+                                                
+                    result=np.dot(vec1,Ghkl)
+                        
+                    if (abs(result-Layers)<EPS):
+                            
+                        if (flag==False):
+                                
+                            print 'first',x,y,z
+                                
+                            Svec3=np.array([x,y,z])
+                                
+                            flag=True
+                                
+                        else:
+                                
+                            vec2=vec1-Layers*(Dhkl**2)*Ghkl
+
+                            vec3=Svec3[0]*ducvec[0]+Svec3[1]*ducvec[1]+Svec3[2]*ducvec[2]
+                                
+                            dist1=np.dot(vec1,vec1)
+                                
+                            dist2=np.dot(vec3,vec3)
+                                
+                            if(dist1<dist2):
+                                
+                                Svec3=np.aray([x,y,z])
+                                    
+        slab_vec[0]=Svec1[0]*ducvec[0]+Svec1[1]*ducvec[1]+Svec1[2]*ducvec[2]
+        slab_vec[1]=Svec2[0]*ducvec[0]+Svec2[1]*ducvec[1]+Svec2[2]*ducvec[2]
+        slab_vec[2]=Svec3[0]*ducvec[0]+Svec3[1]*ducvec[1]+Svec3[2]*ducvec[2]                        
+             
+    else:
+        slab_vec[0]=Svec1[0]*ducvec[0]+Svec1[1]*ducvec[1]+Svec1[2]*ducvec[2]
+        slab_vec[1]=Svec2[0]*ducvec[0]+Svec2[1]*ducvec[1]+Svec2[2]*ducvec[2]
+        slab_vec[2]=Layers*(Dhkl**2)*Ghkl       
+    
+    return slab_vec
  

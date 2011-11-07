@@ -4,7 +4,7 @@ class distortion():
     def __init__(self,atoms,calculator=None,cell=None, eta=None,LagrangeS= None):
        # super(distortion, self).__init__()
         self.atoms=atoms.copy()
-        self.atoms.set_cell(cell)
+        self.atoms.set_cell(cell,scale_atoms=True)
         self.atoms.set_calculator(copy.deepcopy(calculator))
         self.eta=eta
         self.LagrangeS=LagrangeS

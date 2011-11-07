@@ -13,8 +13,9 @@ The complete table of contents:
 .. toctree::
    :maxdepth: 4
 
-   
+   introduction
    RandomSQS/RandomSQS
    StackingFault/Stackingfault
    Elastic/elastic
+   mkslab/mkslab
 
