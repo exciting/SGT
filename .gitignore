@@ -12,3 +12,11 @@
 *.traj
 *.xsf
 *.pkl
+*.struct
+_build
+*.ini
+calc
+Distorted_Parameters
+supercell.xml
+distwenergy
+
