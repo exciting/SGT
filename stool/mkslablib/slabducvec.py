@@ -8,7 +8,9 @@ def slab_ducvec(self):
     N=10
     EPS=1.0e-12 
     points=0
+    N_Layers_Max=1000
     h,k,l=self.miller
+    slab_vec=np.zeros((3,3))
     #    !========  Build lattice grid of (hkl) plane  ==========
     LATGRID1=[]
     for x in range(-N,N):
@@ -22,7 +24,7 @@ def slab_ducvec(self):
     == Define 1st surface vector (the closest to the origin) ==  
     """
     Svec1=LATGRID1[0]
-    for i in range(1,points-1):
+    for i in range(points):
          vec1=Svec1[0]*self.ducvec[0,:]+Svec1[1]*self.ducvec[1,:]+Svec1[2]*self.ducvec[2,:]
          vec2=LATGRID1[i][0]*self.ducvec[0,:]+LATGRID1[i][1]*self.ducvec[1,:]+LATGRID1[i][2]*self.ducvec[2,:]
          dist1=np.dot(vec1,vec1)
@@ -37,7 +39,7 @@ def slab_ducvec(self):
      ! 3) 1st or 2nd nearest to the origin
     """
     flag=False
-    for i in range(0,points-1):
+    for i in range(points):
         #!---     non-collinearity check     --------------
         vec1=Svec1[0]*self.ducvec[0]+Svec1[1]*self.ducvec[1]+Svec1[2]*self.ducvec[2]
         vec2=LATGRID1[i][0]*self.ducvec[0]+LATGRID1[i][1]*self.ducvec[1]+LATGRID1[i][2]*self.ducvec[2]
@@ -110,13 +112,14 @@ def slab_ducvec(self):
     if self.method==2:
     #!------   \\ Ghkl   ---------------------------------
         hkl=np.matrix([h,k,l])
-        M= np.mat(ducvec)*np.transpose(np.mat(ducvec))
+        M= np.mat(self.ducvec)*np.transpose(np.mat(self.ducvec))
             
         M= linalg.inv(M)
  
         V=hkl*M
             
         V=self.Dhkl**2*V
+       
             
         flag=False
             
@@ -126,16 +129,14 @@ def slab_ducvec(self):
                     
             else:
                     
-                temp_vector=N_Layers*V
-
-                isinteger(temp_vector[0],x,err[0])
-                isinteger(temp_vector[1],y,err[1])
-                isinteger(temp_vector[2],z,err[2])
-                    
-                if (err[0]==False and err[1]==False and err[2]==False):
+                temp_vector=np.transpose(N_Layers*V[0])
+                 
+                if all(map(isinteger,temp_vector)):
+                    x,y,z=map(int,map(round,temp_vector))
+                 
                     
                     print 'Good luck! Perpendicular z-vector is found'
-                    print 'The thickness of slab is',N_layers,'Dhkl'
+                    print 'The thickness of slab is',N_Layers,'Dhkl'
                     
                     Slab_layers=self.layers
                     Svec3=np.array([x,y,z])
@@ -144,15 +145,15 @@ def slab_ducvec(self):
                     
                    
                 
-        slab_vec[0]=Svec1[0]*ducvec[0]+Svec1[1]*ducvec[1]+Svec1[2]*ducvec[2]
-        slab_vec[1]=Svec2[0]*ducvec[0]+Svec2[1]*ducvec[1]+Svec2[2]*ducvec[2]
-        slab_vec[2]=Svec3[0]*ducvec[0]+Svec3[1]*ducvec[1]+Svec3[2]*ducvec[2]    
+        slab_vec[0]=Svec1[0]*self.ducvec[0]+Svec1[1]*self.ducvec[1]+Svec1[2]*self.ducvec[2]
+        slab_vec[1]=Svec2[0]*self.ducvec[0]+Svec2[1]*self.ducvec[1]+Svec2[2]*self.ducvec[2]
+        slab_vec[2]=Svec3[0]*self.ducvec[0]+Svec3[1]*self.ducvec[1]+Svec3[2]*self.ducvec[2]    
     elif self.method==3:
         flag=False
         for x in range(N,-N,-1):
             for y in range (N,-N,-1):
                 for z in range(N,-N,-1):
-                    vec1=x*ducvec[0]+y*ducvec[1]+z*ducvec[2]
+                    vec1=x*self.ducvec[0]+y*self.ducvec[1]+z*self.ducvec[2]
                                                 
                     result=np.dot(vec1,Ghkl)
                         
@@ -170,7 +171,7 @@ def slab_ducvec(self):
                                 
                             vec2=vec1-Layers*(Dhkl**2)*Ghkl
 
-                            vec3=Svec3[0]*ducvec[0]+Svec3[1]*ducvec[1]+Svec3[2]*ducvec[2]
+                            vec3=Svec3[0]*self.ducvec[0]+Svec3[1]*self.ducvec[1]+Svec3[2]*self.ducvec[2]
                                 
                             dist1=np.dot(vec1,vec1)
                                 
@@ -180,13 +181,13 @@ def slab_ducvec(self):
                                 
                                 Svec3=np.aray([x,y,z])
                                     
-        slab_vec[0]=Svec1[0]*ducvec[0]+Svec1[1]*ducvec[1]+Svec1[2]*ducvec[2]
-        slab_vec[1]=Svec2[0]*ducvec[0]+Svec2[1]*ducvec[1]+Svec2[2]*ducvec[2]
-        slab_vec[2]=Svec3[0]*ducvec[0]+Svec3[1]*ducvec[1]+Svec3[2]*ducvec[2]                        
+        slab_vec[0]=Svec1[0]*self.ducvec[0]+Svec1[1]*self.ducvec[1]+Svec1[2]*self.ducvec[2]
+        slab_vec[1]=Svec2[0]*self.ducvec[0]+Svec2[1]*self.ducvec[1]+Svec2[2]*self.ducvec[2]
+        slab_vec[2]=Svec3[0]*self.ducvec[0]+Svec3[1]*self.ducvec[1]+Svec3[2]*self.ducvec[2]                        
              
     else:
-        slab_vec[0]=Svec1[0]*ducvec[0]+Svec1[1]*ducvec[1]+Svec1[2]*ducvec[2]
-        slab_vec[1]=Svec2[0]*ducvec[0]+Svec2[1]*ducvec[1]+Svec2[2]*ducvec[2]
+        slab_vec[0]=Svec1[0]*self.ducvec[0]+Svec1[1]*self.ducvec[1]+Svec1[2]*self.ducvec[2]
+        slab_vec[1]=Svec2[0]*self.ducvec[0]+Svec2[1]*self.ducvec[1]+Svec2[2]*self.ducvec[2]
         slab_vec[2]=Layers*(Dhkl**2)*Ghkl       
     
     return slab_vec

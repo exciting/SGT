@@ -26,12 +26,13 @@ class  slab(Atoms):
         
     """
     def __init__(self,structure,miller=[1,1,1],method=2,layers=0,vacuum=0.0):
-        
-        super(slab, self).__init__(structure)
+        ducvec=structure.get_cell()
+        super(slab, self).__init__(structure.repeat(50))
+      
         self.miller=norm_miller(miller)
         self.method=method
         self.layers=layers
-        self.ducvec=self.get_cell()
+        self.ducvec=ducvec
         self.rucvec=np.transpose(linalg.inv(self.ducvec))
         h,k,l=self.miller
         self.Ghkl=h*self.rucvec[0][:]+k*self.rucvec[1][:]+l*self.rucvec[2][:]
@@ -40,10 +41,16 @@ class  slab(Atoms):
         
         else:
             self.slab_vec=slab_ducvec(self)
-            fill_with_atoms(self)
-            self.repeat(50,50,50)
+          
+            self.set_pbc((False, False, False))
+  
+            self.translate(-sum(self.get_cell())/2)
             self.set_cell(self.slab_vec)
+       
             self.remove_surplus_atoms()
+            self.set_pbc((True, True, True))
+            self.set_cell(self.slab_vec)
+      
             self.add_vacuum(vacuum)
             
     def get_miller(self):
@@ -58,13 +65,12 @@ class  slab(Atoms):
         """ remove all atoms that are not in the unit cell"""
         positions=self.get_scaled_positions()
         def not_in_box(position):
-            position=atom.position
-            not_in_box=False
-            for i in range (0,2):
-                if (position[i]<0 or position[i]>=1):
-                    not_in_box=True
-            return not_in_box
-        del self[[atom.index for position in positions if not_in_box(position)]]
+            notinbox=False
+            for i in range (3):
+                if (position[i]<0.0 or position[i]>=1.0):
+                    notinbox=True
+            return notinbox
+        del self[[index for index in range(self.get_number_of_atoms()) if not_in_box(positions[index])]]
              
     def add_vacuum(self,vacuum):
         """ add vacuum along the 3rd basevector """
