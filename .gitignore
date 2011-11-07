@@ -3,3 +3,12 @@
 .project
 .pydevproject
 .settings
+*.in
+*.dat
+*.par
+*.agr
+*.pov
+*.out
+*.traj
+*.xsf
+*.pkl
