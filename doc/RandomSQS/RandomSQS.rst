@@ -1,5 +1,5 @@
 
-.. module:: stool
+.. module:: sgt
 
  
 Screw dislocation in Spezial Quasirandom Structure

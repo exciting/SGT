@@ -1,4 +1,4 @@
-from stool.mkslab import slab
+from sgt.mkslab import slab
 from ase import read,write
 bulk=read('AlBulk.xml',format='exi')
 

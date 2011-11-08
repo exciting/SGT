@@ -1,4 +1,4 @@
-from stool import ElasticDistortion,loadObject
+from sgt import ElasticDistortion,loadObject
 from ase.calculators import Exciting
 from ase import read
 

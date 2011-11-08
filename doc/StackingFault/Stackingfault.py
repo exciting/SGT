@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 
-from stool import StackingFaultShift
+from sgt import StackingFaultShift
 from ase import read, write
 
 primcell=read('00.struct',format='struct')

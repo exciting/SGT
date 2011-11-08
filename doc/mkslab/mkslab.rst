@@ -1,5 +1,5 @@
 
-.. module:: stool
+.. module:: sgt
 
 ==============
 Make Slab
