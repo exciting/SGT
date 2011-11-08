@@ -45,7 +45,7 @@ To build it, follow the instructions on the `spglib page <http://spglib.sourcefo
 After the library is built, one has to add the location to the python path as well. see :ref:`pythonpath`
 
 Finally, :mod:`sgt`  must also be unpacked and installed to the python path. 
-`Get the sources  here <http://g44222/git?p=structure.git;a=snapshot;h=3882a0141e05f94f76c1edc627bfb386009609aa;sf=tgz>`_
+`Get the sources  here <http://g44222/git?p=structure.git;a=snapshot;h=refs/heads/master;sf=tgz>`_
 and set the pythonpath see :ref:`pythonpath`
 
 .. _pythonpath:
