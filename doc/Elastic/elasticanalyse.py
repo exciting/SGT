@@ -1,4 +1,4 @@
-from stool import  *
+from sgt import  *
 distortions=loadObject("distwenergy")
 #distortions.make_report()
 

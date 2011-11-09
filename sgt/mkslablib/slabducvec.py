@@ -25,8 +25,8 @@ def slab_ducvec(self):
     """
     Svec1=LATGRID1[0]
     for i in range(points):
-         vec1=Svec1[0]*self.ducvec[0,:]+Svec1[1]*self.ducvec[1,:]+Svec1[2]*self.ducvec[2,:]
-         vec2=LATGRID1[i][0]*self.ducvec[0,:]+LATGRID1[i][1]*self.ducvec[1,:]+LATGRID1[i][2]*self.ducvec[2,:]
+         vec1=Svec1[0]*self.ducvec[0]+Svec1[1]*self.ducvec[1]+Svec1[2]*self.ducvec[2]
+         vec2=LATGRID1[i][0]*self.ducvec[0]+LATGRID1[i][1]*self.ducvec[1]+LATGRID1[i][2]*self.ducvec[2]
          dist1=np.dot(vec1,vec1)
          dist2=np.dot(vec2,vec2)
          if (dist1>dist2 and dist2!=0):
@@ -45,27 +45,27 @@ def slab_ducvec(self):
         vec2=LATGRID1[i][0]*self.ducvec[0]+LATGRID1[i][1]*self.ducvec[1]+LATGRID1[i][2]*self.ducvec[2]
         vec3= np.cross(vec1,vec2)
         if (abs(vec3[0])<EPS and abs(vec3[1])<EPS and abs(vec3[2])<EPS):
-            pass
+            continue
+        
+        #!---     right-nahd check     --------------------
+        vec3=self.Ghkl
+        mat =[vec1,vec2,vec3]
+        vol=np.linalg.det(mat)
+        if (vol<0):
+            continue
+         
+        if (flag==False ): 
+            Svec2=LATGRID1[i]
+            flag=True
         else:
-            #!---     right-nahd check     --------------------
-            vec3=self.Ghkl
-            mat =[vec1,vec2,vec3]
-            vol=np.linalg.det(mat)
-            if (vol<0):
-                pass
-            else:
-                if (flag==False ): 
-                    Svec2=LATGRID1[i]
-                    flag=True
-                else:
-                    vec1=Svec2[0]*self.ducvec[0,:]+Svec2[1]*self.ducvec[1,:]+Svec2[2]*self.ducvec[2,:]
-                    vec2=LATGRID1[i][0]*self.ducvec[0,:]+LATGRID1[i][1]*self.ducvec[1,:]+LATGRID1[i][2]*self.ducvec[2,:]
-                    dist1=np.dot(vec1,vec1)   
-                    dist2=np.dot(vec2,vec2)  
-                       
-                    if(dist1>dist2 and dist2!=0):
-                        Svec2=LATGRID1[i]
-                
+            vec1=Svec2[0]*self.ducvec[0,:]+Svec2[1]*self.ducvec[1,:]+Svec2[2]*self.ducvec[2,:]
+            vec2=LATGRID1[i][0]*self.ducvec[0,:]+LATGRID1[i][1]*self.ducvec[1,:]+LATGRID1[i][2]*self.ducvec[2,:]
+            dist1=np.dot(vec1,vec1)   
+            dist2=np.dot(vec2,vec2)  
+               
+            if(dist1>dist2 and dist2!=0):
+                Svec2=LATGRID1[i]
+        
                     
     """ !===    Define    3rd  vector  =============================
      ! There are 2 approaches to define 3rd vector:
@@ -114,22 +114,23 @@ def slab_ducvec(self):
         hkl=np.matrix([h,k,l])
         M= np.mat(self.ducvec)*np.transpose(np.mat(self.ducvec))
             
-        M= linalg.inv(M)
- 
-        V=hkl*M
+        M2= linalg.inv(M)
+        
+        V=hkl*M2
             
         V=self.Dhkl**2*V
        
-            
+ 
         flag=False
             
         for  N_Layers in range(1,N_Layers_Max):
             if (flag==True):
-                exit
+                break
                     
             else:
                     
                 temp_vector=np.transpose(N_Layers*V[0])
+              
                  
                 if all(map(isinteger,temp_vector)):
                     x,y,z=map(int,map(round,temp_vector))
@@ -155,9 +156,9 @@ def slab_ducvec(self):
                 for z in range(N,-N,-1):
                     vec1=x*self.ducvec[0]+y*self.ducvec[1]+z*self.ducvec[2]
                                                 
-                    result=np.dot(vec1,Ghkl)
+                    result=np.dot(vec1,self.Ghkl)
                         
-                    if (abs(result-Layers)<EPS):
+                    if (abs(result-self.layers)<EPS):
                             
                         if (flag==False):
                                 
@@ -169,7 +170,7 @@ def slab_ducvec(self):
                                 
                         else:
                                 
-                            vec2=vec1-Layers*(Dhkl**2)*Ghkl
+                            vec2=vec1-self.layers*(self.Dhkl**2)*self.Ghkl
 
                             vec3=Svec3[0]*self.ducvec[0]+Svec3[1]*self.ducvec[1]+Svec3[2]*self.ducvec[2]
                                 
@@ -179,7 +180,7 @@ def slab_ducvec(self):
                                 
                             if(dist1<dist2):
                                 
-                                Svec3=np.aray([x,y,z])
+                                Svec3=np.array([x,y,z])
                                     
         slab_vec[0]=Svec1[0]*self.ducvec[0]+Svec1[1]*self.ducvec[1]+Svec1[2]*self.ducvec[2]
         slab_vec[1]=Svec2[0]*self.ducvec[0]+Svec2[1]*self.ducvec[1]+Svec2[2]*self.ducvec[2]
@@ -188,7 +189,7 @@ def slab_ducvec(self):
     else:
         slab_vec[0]=Svec1[0]*self.ducvec[0]+Svec1[1]*self.ducvec[1]+Svec1[2]*self.ducvec[2]
         slab_vec[1]=Svec2[0]*self.ducvec[0]+Svec2[1]*self.ducvec[1]+Svec2[2]*self.ducvec[2]
-        slab_vec[2]=Layers*(Dhkl**2)*Ghkl       
+        slab_vec[2]=self.layers*(self.Dhkl**2)*self.Ghkl       
     
     return slab_vec
  

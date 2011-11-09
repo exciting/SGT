@@ -35,7 +35,7 @@ class  slab(Atoms):
         self.ducvec=ducvec
         self.rucvec=np.transpose(linalg.inv(self.ducvec))
         h,k,l=self.miller
-        self.Ghkl=h*self.rucvec[0][:]+k*self.rucvec[1][:]+l*self.rucvec[2][:]
+        self.Ghkl=h*self.rucvec[0]+k*self.rucvec[1]+l*self.rucvec[2]
         if self.layers==0:
             print "zero layers does not define a slab"
         
