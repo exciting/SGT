@@ -1,6 +1,6 @@
 from RandomSQS import  SQSscrew
 from StackingFaultShift import StackingFaultShift
-from Elastic import   ElasticDistortion
+from ElaStic import   ElaSticDistortion
 from mkslab import slab
 import pickle
 

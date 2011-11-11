@@ -1,4 +1,4 @@
-from sgt import ElasticDistortion,loadObject
+from sgt import ElaSticDistortion,loadObject
 from ase.calculators import Exciting
 from ase import read
 
@@ -6,7 +6,7 @@ exciting=Exciting(bin='/fshome/chm/git/exciting/bin/excitingser', kpts=(4, 4, 4)
 
 atoms=read('AlBulk.xml',format='exi')
 #print atoms.get_cell()
-distortions=ElasticDistortion(structure=atoms, 
+distortions=ElaSticDistortion(structure=atoms, 
                               calculator=exciting, 
                               order=2, 
                               maxstrain=0.02, 

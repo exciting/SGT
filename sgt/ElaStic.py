@@ -7,7 +7,7 @@ import numpy as np
  
 import pickle
 
-class ElasticDistortion(Elastic_setup):
+class ElaSticDistortion(Elastic_setup):
     """
     This class can setup the calculations for determining the elastic constants
     
