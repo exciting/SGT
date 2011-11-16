@@ -21,11 +21,13 @@ class ElaSticDistortion(Elastic_setup):
         strain the structures maximal by this fraction
     distortions:integer
         how many distortion per distortion kid should be generated
+    method:string default="Energy"
+        The method for calculating the elastic constants. It may be "Energy" or "Stress"
     
     """
-    def __init__(self,structure=None,calculator=None, order=2, maxstrain=0.03,distortions=11):
+    def __init__(self,structure=None,calculator=None, order=2, maxstrain=0.03,distortions=11, method="Energy"):
        
-       
+        self.mthd=method
         self.havecontants=False
         self.setup(structure,calculator, order, maxstrain,distortions)
         self.make_report()

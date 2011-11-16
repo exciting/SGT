@@ -45,9 +45,9 @@ class Elastic_setup():
         self.maxstrain=maxstrain
         self.NPt=distortions
         self.distortions=[]
+       
    
-        if ( hasattr(self.calculator, 'get_stress') ): self.mthd ='Stress' 
-        else:  self.mthd = 'Energy'
+        
         
         #%%%--- DICTIONARIS ---%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         self.Ls_Dic={                       \
