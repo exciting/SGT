@@ -150,9 +150,7 @@ def slab_ducvec(self):
         slab_vec[0]=Svec1[0]*self.ducvec[0]+Svec1[1]*self.ducvec[1]+Svec1[2]*self.ducvec[2]
         slab_vec[1]=Svec2[0]*self.ducvec[0]+Svec2[1]*self.ducvec[1]+Svec2[2]*self.ducvec[2]
         slab_vec[2]=Svec3[0]*self.ducvec[0]+Svec3[1]*self.ducvec[1]+Svec3[2]*self.ducvec[2]    
-        print "Svec1",Svec1
-        print "Svec2",Svec2
-        print "Svec3",Svec3
+        
     elif self.method==3:
         flag=False
         for x in range(N,-N,-1):

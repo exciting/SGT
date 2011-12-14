@@ -27,12 +27,14 @@ class  slab:
     """
     def __init__(self,structure,miller=[1,1,1],method=2,layers=0,vacuum=0.0):
         ducvec=structure.get_cell()
-        self.slab=structure.repeat(50) 
-        
+      
+     
         self.miller=norm_miller(miller)
         self.method=method
         self.layers=layers
         self.ducvec=ducvec
+        self.base=structure
+        self.vacuum=vacuum
         self.rucvec=np.transpose(linalg.inv(self.ducvec))
         h,k,l=self.miller
         self.Ghkl=h*self.rucvec[0]+k*self.rucvec[1]+l*self.rucvec[2]
@@ -40,19 +42,25 @@ class  slab:
             print "zero layers does not define a slab"
         
         else:
-            self.slab_vec=slab_ducvec(self)
-            print "slab_vec\n" ,self.slab_vec
-            print "ducvec\n" ,self.ducvec
-            self.slab.set_pbc((False, False, False))
-  
-            self.slab.translate(-sum(self.slab.get_cell())/2)
-            self.slab.set_cell(self.slab_vec)
-       
-            self.remove_surplus_atoms()
-            self.slab.set_pbc((True, True, True))
-      
-            self.add_vacuum(vacuum)
+            self.make_slab()   
             
+    def make_slab(self):
+        self.slab= self.base.repeat(50) 
+        self.slab_vec=slab_ducvec(self)
+        self.slab.set_pbc((False, False, False))
+        self.slab.translate(-sum(self.slab.get_cell())/2)
+        self.slab.set_cell(self.slab_vec)
+        self.remove_surplus_atoms()
+        self.slab.set_pbc((True, True, True))
+        self.add_vacuum(self.vacuum)
+    def set_layers(self,layers):
+        """set the number of layers
+        arguments:
+            layers:integer
+                Number of layers to make
+        """
+        self.layers=layers
+        self.make_slab()
     def get_miller(self):
         """ return Miller indices """
         return self.miller
