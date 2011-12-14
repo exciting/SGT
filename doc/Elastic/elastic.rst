@@ -22,7 +22,7 @@ Interface
 
 
 
-.. autoclass::  ElasticDistortion
+.. autoclass::  ElaSticDistortion
    :members:
 
 

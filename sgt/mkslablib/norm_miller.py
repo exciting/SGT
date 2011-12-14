@@ -3,7 +3,7 @@ def norm_miller(miller):
     h,k,l=miller
     if (h==0 and k==0 and l==0): 
             print 'ERROR: incorrect (h,k,l)'
-            return True
+            return
         
          
     x=abs(h)

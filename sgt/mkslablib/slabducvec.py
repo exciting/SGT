@@ -109,17 +109,17 @@ def slab_ducvec(self):
      !     * - the direction of the 3rd vector 
      !-----------------------------------------------------------            
      """             
-    if self.method==2:
+    if (self.method==2):
     #!------   \\ Ghkl   ---------------------------------
         hkl=np.matrix([h,k,l])
         M= np.mat(self.ducvec)*np.transpose(np.mat(self.ducvec))
-            
+         
         M2= linalg.inv(M)
-        
+      
         V=hkl*M2
             
         V=self.Dhkl**2*V
-       
+      
  
         flag=False
             
@@ -141,7 +141,8 @@ def slab_ducvec(self):
                     
                     Slab_layers=self.layers
                     Svec3=np.array([x,y,z])
-                    Svec3=Slab_layers*Svec3   
+                    Svec3=Slab_layers*Svec3  
+                     
                     flag=True
                     
                    
@@ -149,6 +150,9 @@ def slab_ducvec(self):
         slab_vec[0]=Svec1[0]*self.ducvec[0]+Svec1[1]*self.ducvec[1]+Svec1[2]*self.ducvec[2]
         slab_vec[1]=Svec2[0]*self.ducvec[0]+Svec2[1]*self.ducvec[1]+Svec2[2]*self.ducvec[2]
         slab_vec[2]=Svec3[0]*self.ducvec[0]+Svec3[1]*self.ducvec[1]+Svec3[2]*self.ducvec[2]    
+        print "Svec1",Svec1
+        print "Svec2",Svec2
+        print "Svec3",Svec3
     elif self.method==3:
         flag=False
         for x in range(N,-N,-1):

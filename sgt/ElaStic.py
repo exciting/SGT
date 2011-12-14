@@ -16,7 +16,7 @@ class ElaSticDistortion(Elastic_setup):
     calculator: calculator object
     
     order: integer
-        order of elastic constatns
+        order of elastic constants
     maxstrain:number
         strain the structures maximal by this fraction
     distortions:integer
@@ -43,7 +43,7 @@ class ElaSticDistortion(Elastic_setup):
             else:
                 dist.atoms.get_stress()
  
-    def select_data(self):
+    def show_data(self):
         """
         select range an fitorder to eliminate errors
         """
@@ -83,7 +83,6 @@ class ElaSticDistortion(Elastic_setup):
                     '\nVolume of equilibrium unit cell =', self.structure.get_volume(), '[a.u^3]',\
                     '\nMaximum Lagrangian strain       =', self.maxstrain          ,\
                     '\nNumber of distorted structures  =', self.NPt ,\
-                    '\nMethod                          =', self.mthd,\
                     '\nNumber of elastic constatns     =', self.ECs
         if self.havecontants:
             print_elastic_moduli(self,None)

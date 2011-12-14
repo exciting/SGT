@@ -5,7 +5,7 @@ from mkslablib.fill_with_atoms import fill_with_atoms
 from mkslablib.add_vacuum import add_vacuum
 from numpy import linalg
 import numpy as np 
-class  slab(Atoms):
+class  slab:
     """ create slab from bulk structure
     
             arguments:
@@ -27,8 +27,8 @@ class  slab(Atoms):
     """
     def __init__(self,structure,miller=[1,1,1],method=2,layers=0,vacuum=0.0):
         ducvec=structure.get_cell()
-        super(slab, self).__init__(structure.repeat(50))
-      
+        self.slab=structure.repeat(50) 
+        
         self.miller=norm_miller(miller)
         self.method=method
         self.layers=layers
@@ -41,15 +41,15 @@ class  slab(Atoms):
         
         else:
             self.slab_vec=slab_ducvec(self)
-          
-            self.set_pbc((False, False, False))
+            print "slab_vec\n" ,self.slab_vec
+            print "ducvec\n" ,self.ducvec
+            self.slab.set_pbc((False, False, False))
   
-            self.translate(-sum(self.get_cell())/2)
-            self.set_cell(self.slab_vec)
+            self.slab.translate(-sum(self.slab.get_cell())/2)
+            self.slab.set_cell(self.slab_vec)
        
             self.remove_surplus_atoms()
-            self.set_pbc((True, True, True))
-            self.set_cell(self.slab_vec)
+            self.slab.set_pbc((True, True, True))
       
             self.add_vacuum(vacuum)
             
@@ -61,19 +61,22 @@ class  slab(Atoms):
         return self.layers
     def get_ducvec(self):
         return self.ducvec
+    def get_atoms(self):
+        """return Atoms object"""
+        return self.slab
     def remove_surplus_atoms(self):
         """ remove all atoms that are not in the unit cell"""
-        positions=self.get_scaled_positions()
+        positions=self.slab.get_scaled_positions()
         def not_in_box(position):
             notinbox=False
             for i in range (3):
-                if (position[i]<0.0 or position[i]>=1.0):
+                if (position[i]<-1.0e-10 or position[i]>(1.0-1.0e-10)):
                     notinbox=True
             return notinbox
-        del self[[index for index in range(self.get_number_of_atoms()) if not_in_box(positions[index])]]
+        del self.slab[[index for index in range(self.slab.get_number_of_atoms()) if not_in_box(positions[index])]]
              
     def add_vacuum(self,vacuum):
         """ add vacuum along the 3rd basevector """
-        cell=self.get_cell()
-        cell[2]+=vacuum
-        self.set_cell(cell)
+        cell=self.slab.get_cell()
+        cell[2]+=vacuum*cell[2]/sqrt(np.dot(cell[2],cell[2]))
+        self.slab.set_cell(cell)

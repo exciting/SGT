@@ -22,6 +22,5 @@ The complete table of contents:
    install
    RandomSQS/RandomSQS
    StackingFault/Stackingfault
-   Elastic/elastic
    mkslab/mkslab
 
