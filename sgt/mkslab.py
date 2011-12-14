@@ -53,6 +53,7 @@ class  slab:
         self.remove_surplus_atoms()
         self.slab.set_pbc((True, True, True))
         self.add_vacuum(self.vacuum)
+      
     def set_layers(self,layers):
         """set the number of layers
         arguments:
@@ -86,5 +87,8 @@ class  slab:
     def add_vacuum(self,vacuum):
         """ add vacuum along the 3rd basevector """
         cell=self.slab.get_cell()
-        cell[2]+=vacuum*cell[2]/sqrt(np.dot(cell[2],cell[2]))
+        ext=np.array(vacuum*cell[2]/sqrt(np.dot(cell[2],cell[2])))
+        cell[2]+=ext
         self.slab.set_cell(cell)
+        self.slab.translate(ext/2)
+        
