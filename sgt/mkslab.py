@@ -73,7 +73,7 @@ class  slab:
         return self.ducvec
     def get_atoms(self):
         """return Atoms object"""
-        return self.slab
+        return self.slab.copy()
     def _remove_surplus_atoms(self):
         """ remove all atoms that are not in the unit cell"""
         positions=self.slab.get_scaled_positions()
