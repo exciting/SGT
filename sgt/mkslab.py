@@ -50,12 +50,13 @@ class  slab:
         self.slab.set_pbc((False, False, False))
         self.slab.translate(-sum(self.slab.get_cell())/2)
         self.slab.set_cell(self.slab_vec)
-        self.remove_surplus_atoms()
+        self._remove_surplus_atoms()
         self.slab.set_pbc((True, True, True))
         self.add_vacuum(self.vacuum)
       
     def set_layers(self,layers):
         """set the number of layers
+        
         arguments:
             layers:integer
                 Number of layers to make
@@ -73,7 +74,7 @@ class  slab:
     def get_atoms(self):
         """return Atoms object"""
         return self.slab
-    def remove_surplus_atoms(self):
+    def _remove_surplus_atoms(self):
         """ remove all atoms that are not in the unit cell"""
         positions=self.slab.get_scaled_positions()
         def not_in_box(position):

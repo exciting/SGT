@@ -1,3 +1,7 @@
+
+.. module:: sgt
+
+
 ================================
 AMDM Structure Generation Tools (SGT)
 ================================
