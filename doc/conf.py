@@ -52,7 +52,7 @@ source_suffix = '.rst'
 master_doc = 'contents'
 
 # General substitutions.
-project = 'Structure'
+project = 'SGT'
 copyright = '2011, Unileoben'
 
 # The default replacements for |version| and |release|, also used in various
@@ -60,9 +60,9 @@ copyright = '2011, Unileoben'
 #
 # The short X.Y version.
 try:
-    from ase.version import version
+    from sgt.version import version
 except ImportError:
-    version = '3.0.0'
+    version = '0.1'
 # The full version, including alpha/beta/rc tags.
 release = version
 
