@@ -82,6 +82,7 @@ class  slab:
             for i in range (3):
                 if (position[i]<-1.0e-10 or position[i]>(1.0-1.0e-10)):
                     notinbox=True
+                    continue
             return notinbox
         del self.slab[[index for index in range(self.slab.get_number_of_atoms()) if not_in_box(positions[index])]]
              

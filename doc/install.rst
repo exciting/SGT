@@ -13,22 +13,23 @@ Collection of Structure generation tools
 Installation
 ==========
 
-The :mod:`sgt` 
-package is a python module. Please folow the installation steps thoroghly to satisfy all dependencies.
+The SGT 
+package is a python module. Please follow the installation steps thoroughly to satisfy all dependencies.
 
 Requirements
 -------------
-:mod:`sgt`  builds on the Atomic Simulation Environment `ASE <https://wiki.fysik.dtu.dk/ase/index.html>`_ 
+SGT  builds on the Atomic Simulation Environment `ASE <https://wiki.fysik.dtu.dk/ase/index.html>`_ 
 which in turn needs `numpy <http://numpy.scipy.org/>`_. 
-Additionaly some parts need  
+Additionally some parts need  
 `matplotlib <http://matplotlib.sourceforge.net/>`_
 
 Installation Steps
 ------------------
 
 Numpy and Matplotlib are available as convenient packages which are easy to install. 
-For windows and Mac OS X the Enthought Python Distribution 
-(`EPD <http://www.enthought.com/products/epd.php>`_) installs python with numpy and matplotlib conviniently. 
+For windows and Mac OS X the Enough Python Distribution 
+(`EPD <http://www.enthought.com/products/epd.php>`_) installs python with numpy
+ and matplotlib conveniently. 
 Under Linux your package manager will probably have the appropriate packages.
 
 The other packages have to be downloaded manually and installed to the python path. 
@@ -38,7 +39,9 @@ To install ASE please download the latest stable release from the
 `ASE homepage <https://wiki.fysik.dtu.dk/ase/index.html>`_.
 The installation requires to unpack the sources an add the location of the ASE module 
 to the python path. see :ref:`pythonpath`
- 
+
+Finally, SGT can be installed. `Download the Package here, <https://github.com/exciting/SGT/zipball/master>`_ 
+unpack it, and set the python path :ref:`pythonpath`
 
 .. _pythonpath:
 
