@@ -1,4 +1,4 @@
-from sgt.mkslab import slab
+from sgt import slab
 from ase.io import read,write
 bulk=read('Rutile.struct',format='struct')
 

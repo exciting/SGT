@@ -1,6 +1,6 @@
 import numpy as np
 import math as m
-import copy
+ 
 from numpy import linalg
 from isinteger import isinteger
 def slab_ducvec(self):
@@ -14,22 +14,22 @@ def slab_ducvec(self):
     #    !========  Build lattice grid of (hkl) plane  ==========
     LATGRID1=[]
     for x in range(-N,N):
-         for y in range (-N,N):
-             for z in range (-N,N):
-                 if((x*h+y*k+z*l)==0):   
-                     LATGRID1.append(np.array([x,y,z]))
-                     points+=1 
+        for y in range (-N,N):
+            for z in range (-N,N):
+                if((x*h+y*k+z*l)==0):   
+                    LATGRID1.append(np.array([x,y,z]))
+                    points+=1 
     """
     =======         Define surface vectors   ===============
     == Define 1st surface vector (the closest to the origin) ==  
     """
     Svec1=LATGRID1[0]
     for i in range(points):
-         vec1=Svec1[0]*self.ducvec[0]+Svec1[1]*self.ducvec[1]+Svec1[2]*self.ducvec[2]
-         vec2=LATGRID1[i][0]*self.ducvec[0]+LATGRID1[i][1]*self.ducvec[1]+LATGRID1[i][2]*self.ducvec[2]
-         dist1=np.dot(vec1,vec1)
-         dist2=np.dot(vec2,vec2)
-         if (dist1>dist2 and dist2!=0):
+        vec1=Svec1[0]*self.ducvec[0]+Svec1[1]*self.ducvec[1]+Svec1[2]*self.ducvec[2]
+        vec2=LATGRID1[i][0]*self.ducvec[0]+LATGRID1[i][1]*self.ducvec[1]+LATGRID1[i][2]*self.ducvec[2]
+        dist1=np.dot(vec1,vec1)
+        dist2=np.dot(vec2,vec2)
+        if (dist1>dist2 and dist2!=0):
                 Svec1=LATGRID1[i]
     """ !== Define 2nd surface vector   =========================
      ! 2nd surface vector should be:

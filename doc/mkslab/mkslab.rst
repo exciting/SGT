@@ -15,5 +15,5 @@ Example
 Interface
 -------------------
 
-.. autoclass::  slab
-   :members:
+.. autoclass:: slab
+	:members:
