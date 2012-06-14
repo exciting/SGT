@@ -10,17 +10,17 @@ class  slab(object):
     
     
     structure: Atoms
-        Bulk structure to create slab from
+        Bulk structure to create slab from.
     miller: 3 dimensional integer
-        Miller index describing the desired slab
+        Miller index describing the desired slab.
     method: integer
-        (1) z-vector is perpendicular to surface [DEFAULT]
-        (2) z-vector is perpendicular to surface(with depth periodicity)
-        (3) z-vector is the nearest to normal in Nth layer
+        (1) z-vector is perpendicular to surface [DEFAULT].
+        (2) z-vector is perpendicular to surface(with depth periodicity).
+        (3) z-vector is the nearest to normal in Nth layer.
     layers: integer
-        number of layers of constructed slab
+        Number of layers of constructed slab.
     vacuum: float
-        vacuum to be added along z direction
+        Vacuum to be added along z direction.
     """
     def __init__(self,structure,miller=[1,1,1],method=2,layers=0,vacuum=0.0):
         ducvec=structure.get_cell()
@@ -53,33 +53,33 @@ class  slab(object):
       
     def set_layers(self,layers):
         """
-        set the number of layers
+        Set the number of layers.
         
         layers:integer
-             Number of layers to make
+             Number of layers to make.
         """
         self.layers=layers
         self.make_slab()
     def get_miller(self):
         """
-        return Miller indices 
+        Return Miller indices.
         """
         return self.miller
     def get_layers(self):
         """
-        return number of layers 
+        Return number of layers.
         """
         return self.layers
     def get_ducvec(self):
         return self.ducvec
     def get_atoms(self):
         """
-        return Atoms object
+        Return Atoms object.
         """
         return self.slab.copy()
     def _remove_surplus_atoms(self):
         """ 
-        remove all atoms that are not in the unit cell
+        Remove all atoms that are not in the unit cell.
         """
         positions=self.slab.get_scaled_positions()
         def not_in_box(position):
@@ -93,7 +93,7 @@ class  slab(object):
              
     def add_vacuum(self,vacuum):
         """ 
-        add vacuum along the 3rd basevector 
+        Add vacuum along the 3rd base vector. 
         """
         cell=self.slab.get_cell()
         ext=np.array(vacuum*cell[2]/sqrt(np.dot(cell[2],cell[2])))

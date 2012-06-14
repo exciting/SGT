@@ -192,7 +192,7 @@ class SQSscrew(object):
                 (dictvar[i][0],dictvar[i][1])=(dictvar[i][1],dictvar[i][0])
             dictvar.sort()
             norder = [dictvar[i][1] for i in range(len(dictvar))]
-            ll.append(norder)
+            ll.append(norder)S
             ### compare the new structure with the old one
             if rmsen<rmse:
                 self.rmse = rmsen
