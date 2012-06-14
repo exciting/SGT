@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 
 from sgt import StackingFaultShift
-from ase import read, write
+from ase.io import read, write
 
 primcell=read('00.struct',format='struct')
 

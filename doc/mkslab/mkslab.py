@@ -1,5 +1,5 @@
 from sgt.mkslab import slab
-from ase import read,write
+from ase.io import read,write
 bulk=read('Rutile.struct',format='struct')
 
 

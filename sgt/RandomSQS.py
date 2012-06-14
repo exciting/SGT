@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 from ase.lattice.cubic import *
-from sets import Set
+ 
 from numpy import *
 from math import *
 from ase import *
@@ -9,7 +9,7 @@ from pylab import *
 import random
 import pickle
 import inspect
-
+from ase.io.trajectory import  PickleTrajectory
 #print '**** Create the 5x9 supercell structure ****'
 #LC      = input('1. What is the lattice constant in Angstron? \n')
 #NB    = input('2. What is the length of dislocation line in Bergers vector? \n')
@@ -22,15 +22,15 @@ class SQSscrew(object):
          Create the object that contains the 5x9 supercell structure with screw dislocations
          
          LC: number
-                lattice constant in Ångström
+                Lattice constant in Ångström.
          NB: number   
-                length of dislocation line in Bergers vector
+                Length of dislocation line in Bergers vector.
          E1: string
-                first element symbol
+                First element symbol.
          E2: string   
-                second element symbol
+                Second element symbol.
          x: number   
-                concentration of second alloying element. i.e. 0.25
+                Concentration of second alloying element. i.e. 0.25.
     """
     
     def   __init__(self,LC=None,NB=None,E1=None,E2=None,x=.2,trials=10000 ):
@@ -71,17 +71,17 @@ class SQSscrew(object):
                 diff  = pos1 - pos2
                 bond  = sqrt(dot(diff,diff))
                 if   round(bond,6)==dist[0]:
-                     NN1[i-13*len(self.SC)].append(j)
+                    NN1[i-13*len(self.SC)].append(j)
                 elif round(bond,6)==dist[1]:
-                     NN2[i-13*len(self.SC)].append(j)
+                    NN2[i-13*len(self.SC)].append(j)
                 elif round(bond,6)==dist[2]:
-                     NN3[i-13*len(self.SC)].append(j)
+                    NN3[i-13*len(self.SC)].append(j)
                 elif round(bond,6)==dist[3]:
-                     NN4[i-13*len(self.SC)].append(j)
+                    NN4[i-13*len(self.SC)].append(j)
                 elif round(bond,6)==dist[4]:
-                     NN5[i-13*len(self.SC)].append(j)
+                    NN5[i-13*len(self.SC)].append(j)
                 elif round(bond,6)==dist[5]:
-                     NN6[i-13*len(self.SC)].append(j)
+                    NN6[i-13*len(self.SC)].append(j)
         
         
         print '**** Insert two dislocations in single slice ****'
@@ -114,13 +114,13 @@ class SQSscrew(object):
             r1 = sqrt(dot(diff1, diff1))
             r2 = sqrt(dot(diff2, diff2))
             if r1 < dist[0]:
-               cnn1.append(i)
-            elif dist[0] < r1 < dist[1]:
-               cnnn1.append(i)
+                cnn1.append(i)
+            elif dist[0] < r1 < dist[1]: 
+                cnnn1.append(i)
             if r2 < dist[0]:
-               cnn2.append(i)
+                cnn2.append(i)
             elif dist[0] < r2 < dist[1]:
-               cnnn2.append(i)
+                cnnn2.append(i)
         
         ### apply the polarity to obtain the asymmetric core
         cpos = self.screw.get_positions()
@@ -162,9 +162,9 @@ class SQSscrew(object):
             for i in range(len(NA)):
                 symbol=NA[i].get_symbol()
                 if symbol==E1:
-                   s[i]=1.
+                    s[i]=1.
                 else:
-                   s[i]=-1.
+                    s[i]=-1.
             ### sum up the products of pair-wise
             c1,c2,c3,c4,c5,c6=0,0,0,0,0,0
             for i in range(13*len(self.SC),14*len(self.SC)):
@@ -187,18 +187,18 @@ class SQSscrew(object):
             traj.write(AA)
             ### get the atomic order for new random alloy
             order = AA.get_tags()
-            dict  = [[i+1,order[i]] for i in range(len(order))]
-            for i in range(len(dict)):
-                (dict[i][0],dict[i][1])=(dict[i][1],dict[i][0])
-            dict.sort()
-            norder = [dict[i][1] for i in range(len(dict))]
+            dictvar  = [[i+1,order[i]] for i in range(len(order))]
+            for i in range(len(dictvar)):
+                (dictvar[i][0],dictvar[i][1])=(dictvar[i][1],dictvar[i][0])
+            dictvar.sort()
+            norder = [dictvar[i][1] for i in range(len(dictvar))]
             ll.append(norder)
             ### compare the new structure with the old one
             if rmsen<rmse:
-               self.rmse = rmsen
-               self.cp   = cn
-               self.l    = norder
-               self.lat  = AA
+                self.rmse = rmsen
+                self.cp   = cn
+                self.l    = norder
+                self.lat  = AA
             
  
         
@@ -207,11 +207,11 @@ class SQSscrew(object):
         print >>out, self.cp[0],self.cp[1],self.cp[2],self.cp[3],self.cp[4],self.cp[5], self.rmse
         for i in self.l:
             print >>out, i
-        dict = [[i,self.l[i]] for i in range(len(self.l))]
-        for i in range(len(dict)):
-            (dict[i][0],dict[i][1])=(dict[i][1],dict[i][0])
-        dict.sort()
-        norder = [dict[i][1] for i in range(len(dict))]
+        dictvar = [[i,self.l[i]] for i in range(len(self.l))]
+        for i in range(len(dictvar)):
+            (dictvar[i][0],dictvar[i][1])=(dictvar[i][1],dictvar[i][0])
+        dictvar.sort()
+        norder = [dictvar[i][1] for i in range(len(dictvar))]
         SC0 = self.screw.repeat((1,1,self.NB))
         SC1 = self.screwn.repeat((1,1,self.NB))
         self.lat0 = Atoms()
@@ -238,8 +238,8 @@ class SQSscrew(object):
         The show method displays the screw dislocations.
          
         file: string
-            If given the picture is written to a file. The format is determined by the suffix.
-            Else the picture is displayed to the user
+            If given, the picture is written to a file. The format is determined by the suffix.
+            Else the picture is displayed to the user.
         
         """
     
@@ -310,23 +310,23 @@ class SQSscrew(object):
         title('1/2<111> screw dislocation')
         axis([-2.5, cell[0][0]+cell[1][0]+2.5, -(((cell[0][0]+cell[1][0])+5)*3/4-cell[1][1])/2, cell[1][1]+(((cell[0][0]+cell[1][0])+5)*3/4-cell[1][1])/2])
         if file :
-           savefig(file)
+            savefig(file)
         else:
             show()
     
     def get_bcc(self):
         """
-        returns the undisturbed lattice.
+        Returns the undisturbed lattice.
         """
         return self.lat
     def get_sym(self):
         """
-        returns the lattice with screw dislocation.
+        Returns the lattice with screw dislocation.
         """
         return self.lat0
     def get_asy(self):
         """
-        returns the lattice with asymmetric screw dislocation.
+        Returns the lattice with asymmetric screw dislocation.
         """
         return self.lat1
     
